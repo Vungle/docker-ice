@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: netflix-ice
+  labels:
+    app: netflix-ice
+spec:
+  ports:
+  - port: 8085
+    protocol: TCP
+    targetPort: 8085
+    name: http
+  selector:
+    app: netflix-ice

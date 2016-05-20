@@ -1,13 +1,13 @@
 ice:
   image: jonbrouse/ice:latest
-  command: | 
+  command: |
     -Djava.net.preferIPv4Stack=true
     -Djava.net.preferIPv4Addresses
-    -Dice.s3AccessKeyId=<s3AccessKeyId>
-    -Dice.s3SecretKey=<s3SecretKeyId>
+    -Dice.s3AccessKeyId=AKIAIUX44DZEMSH5DZQA
+    -Dice.s3SecretKey=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
     run-app
   volumes:
-    - ./ice/assets/ice.properties:/opt/ice/src/java/ice.properties
+    - ./kubernetes/ice.properties:/opt/ice/src/java/ice.properties
 nginx:
   image: jonbrouse/ice-proxy:latest
   ports:

@@ -1,0 +1,81 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  labels:
+    app: netflix-ice
+  name: netflix-ice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netflix-ice
+  template:
+    metadata:
+      labels:
+        app: netflix-ice
+    spec:
+      containers:
+
+      # Doorman
+      - name: "doorman"
+        image: "vungle/doorman:latest"
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 8085
+          protocol: "TCP"
+        env:
+        - name: DOORMAN_MODULES
+          value: "github"
+        - name: DOORMAN_LISTEN_PORT
+          value: "8085"
+        - name: DOORMAN_PROXY_HOST
+          value: localhost
+        - name: DOORMAN_PROXY_PORT
+          value: "8080"
+        - name: DOORMAN_GITHUB_APPID
+          valueFrom:
+            secretKeyRef:
+              name: github-oauth-netflix-ice
+              key: doorman.github.appid
+        - name: DOORMAN_GITHUB_APPSECRET
+          valueFrom:
+            secretKeyRef:
+              name: github-oauth-netflix-ice
+              key: doorman.github.secret
+        - name: DOORMAN_GITHUB_REQUIRED_ORGANIZATION
+          valueFrom:
+            secretKeyRef:
+              name: github-oauth-netflix-ice
+              key: doorman.github.required.organization
+
+
+
+      # Netflix Ice container
+      - name: netflix-ice
+        image: vungle/ice:latest # jonbrouse/ice:latest
+        command: ["/opt/ice/grailsw", "-Djava.net.preferIPv4Stack=true", "-Djava.net.preferIPv4Addresses", "-Dice.s3AccessKeyId=", "-Dice.s3SecretKey=", "run-app"]
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        # volumeMounts:
+        #  -
+        #    name: secret-volume
+        #    readOnly: true
+        #    mountPath: /opt/properties
+      imagePullSecrets:
+      - name: vungleregistrykey
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+
+      # Secret
+      # volumes:
+      #  -
+      #    name: secret-volume
+      #    secret:
+      #      secretName: netflix-ice-properties
+      volumes:
+      - name: github-oauth-netflix-ice
+        secret:
+          secretName: github-oauth-netflix-ice

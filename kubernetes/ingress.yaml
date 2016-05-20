@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: netflix-ice
+spec:
+  tls:
+  - hosts:
+    - netflix-ice.vungle.io
+    # This secret must exist beforehand
+    # The cert must also contain the subj-name foo.bar.com
+    # You can create it via:
+    # make keys secret SECRET=/tmp/foobar.json HOST=foo.bar.com NAME=foobar
+    # https://github.com/kubernetes/contrib/tree/master/ingress/controllers/gce/https_example
+    secretName: ssl-cert-start-vungle-io
+  rules:
+  - host: netflix-ice.vungle.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: netflix-ice
+          servicePort: 8085
