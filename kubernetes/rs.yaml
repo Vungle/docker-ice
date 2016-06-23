@@ -53,7 +53,7 @@ spec:
       # Netflix Ice container
       - name: netflix-ice
         image: vungle/ice:latest # jonbrouse/ice:latest
-        command: ["/opt/ice/grailsw", "-Djava.net.preferIPv4Stack=true", "-Djava.net.preferIPv4Addresses", "-Dice.s3AccessKeyId=", "-Dice.s3SecretKey=", "run-app"]
+        command: ["/opt/ice/grailsw", "-Djava.net.preferIPv4Stack=true", "-Djava.net.preferIPv4Addresses", "-Dice.s3AccessKeyId=AKIAJKARCRMUBJ37SS3Q", "-Dice.s3SecretKey=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", "run-app"]
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
@@ -69,13 +69,3 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
 
-      # Secret
-      # volumes:
-      #  -
-      #    name: secret-volume
-      #    secret:
-      #      secretName: netflix-ice-properties
-      volumes:
-      - name: github-oauth-netflix-ice
-        secret:
-          secretName: github-oauth-netflix-ice

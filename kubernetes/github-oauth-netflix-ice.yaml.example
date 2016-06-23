@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  doorman.github.appid: 
+  doorman.github.required.organization:
+  doorman.github.secret: 
+kind: Secret
+metadata:
+  name: github-oauth-netflix-ice
+type: Opaque
